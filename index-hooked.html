@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atrium Classifieds</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/gh/alvinashiatey/Sheets@latest/dist/sheets.umd.min.js"></script>
+</head>
+
+<body>
+
+    <main>
+
+        <section id="info">
+            <h1>Atrium Classifieds</h1>
+            <h2>Community Kiosk by Junyi Shi, Lester Rosso + Kyle Richardson</h2>
+        </section>
+
+        <section id="posts">
+
+        </section>
+
+    </main>
+
+    <script>
+        // the class Sheet is from the fetched sheets.umd.min.js
+        const sheetID = "1d0BSRrRxpYYJ8vczk529IuGwopnPt6NpHa4XyqRLS9U";
+        const page = document.querySelector("#posts");
+        const sheet = new Sheets(sheetID);
+
+        sheet.getMyData().then(function (data) {
+            console.log(data);
+
+
+            const rowObjects = [{
+                rows: [
+                    "post-date",
+                    "post-type",
+                    "request-post-title",
+                    "request-wanted-by",
+                    "request-desc",
+                    "request-img",
+                    "request-contact",
+                    "request-email"
+                    ],
+                className: "request"
+            },
+            {
+                rows: [
+                    "post-date",
+                    "post-type",
+                    "offering-post-title",
+                    "offering-wanted-by",
+                    "offering-desc",
+                    "offering-img",
+                    "offering-contact",
+                    "offering-email"
+                    ],
+                className: "offering"
+            },
+            {
+                rows: [
+                    "post-date",
+                    "post-type",
+                    "proposal-post-title",
+                    "proposal-wanted-by",
+                    "proposal-desc",
+                    "proposal-img",
+                    "proposal-contact",
+                    "proposal-email"
+                    ],
+                className: "proposal"
+            },
+            {
+                rows: [
+                    "post-date",
+                    "post-type",
+                    "announce-post-title",
+                    "announce-when",
+                    "announce-desc",
+                    "announce-img",
+                    "announce-contact",
+                    "announce-email"
+                    ],
+                className: "announce"
+            }, 
+            {
+                rows: [
+                    "post-date",
+                    "post-type",
+                    "free-post-title",
+                    "free-when",
+                    "free-desc",
+                    "free-img",
+                    "free-contact",
+                    "free-email"
+                    ],
+                className: "free"
+            }]
+
+
+            const ul = document.createElement("ul");
+
+            function setupPost(rowObject) {
+                const collapsedRows = sheet.collapseKeys(
+                    ...rowObject.rows
+                );
+
+                for (const row of collapsedRows) {
+                    let rowkeys = Object.keys(row)
+                    let validateArray = rowkeys.map(el=> {
+                        if (el.split('-').includes(rowObject.className))return row[el]
+                    }).filter(function (el) {
+                return el != "";
+                });
+                    console.log(rowkeys)
+
+                if (validateArray.length){
+                    sheet.createElement({
+                        tag: "div",
+                        className: rowObject.className,
+                        children: rowObject.rows.map(item => {
+                            if (item.split('-').includes('title')) {
+                                return { tag: "h2", content: row[item] }
+                            } else if (item.split('-').includes('img')) {
+                                return {
+                                    tag: "img", attributes: {
+                                        src: row[item]
+                                    },
+                                }
+                            } else {
+                                return { tag: "p", content: row[item] }
+                            }
+
+                        })
+
+                    })
+                        .appendTo("#posts");
+                } console.log(validateArray)
+            }
+
+               
+            }
+            
+            for (const rowObject of rowObjects){
+                setupPost(rowObject);      
+            } 
+        });
+
+
+
+    </script>
+
+    <script>
+          // for (const row of collapsedRows) {
+            //     sheet.createElement({
+            //         tag: "div",
+            //         className: "request",
+            //         children: [
+            //             { tag: "h2", content: row["request-post-title"] },
+            //             { tag: "p", content: row["post-date"] },
+            //             { tag: "p", content: row["post-type"] },
+            //             { tag: "p", content: row["request-wanted-by"] },
+            //             {
+            //                 tag: "img", attributes: {
+            //                     src: row["request-img"],
+            //                 },
+            //             },
+            //             { tag: "p", content: row["request-desc"] },
+            //             { tag: "p", content: row["request-contact"] },
+            //             { tag: "p", content: row["request-email"] },
+            //         ],
+            //     })
+            //         .appendTo("#posts");
+
+            //     sheet.createElement({
+            //         tag: "div",
+            //         className: "proposal",
+            //         children: [
+            //             { tag: "h2", content: row["proposal-post-title"] },
+            //             { tag: "p", content: row["post-date"] },
+            //             { tag: "p", content: row["post-type"] },
+            //             { tag: "p", content: row["proposal-wanted-by"] },
+            //             {
+            //                 tag: "img", attributes: {
+            //                     src: row["proposal-img"],
+            //                 },
+            //             },
+            //             { tag: "p", content: row["proposal-desc"] },
+            //             { tag: "p", content: row["proposal-contact"] },
+            //             { tag: "p", content: row["proposal-email"] },
+            //         ],
+            //     })
+            //         .appendTo("#posts");
+
+            //     sheet.createElement({
+            //         tag: "div",
+            //         className: "offering",
+            //         children: [
+            //             { tag: "h2", content: row["offering-post-title"] },
+            //             { tag: "p", content: row["post-date"] },
+            //             { tag: "p", content: row["post-type"] },
+            //             { tag: "p", content: row["offering-wanted-by"] },
+            //             {
+            //                 tag: "img", attributes: {
+            //                     src: row["offering-img"],
+            //                 },
+            //             },
+            //             { tag: "p", content: row["offering-desc"] },
+            //             { tag: "p", content: row["offering-contact"] },
+            //             { tag: "p", content: row["offering-email"] },
+            //         ],
+            //     })
+            //         .appendTo("#posts");
+
+            //     sheet.createElement({
+            //         tag: "div",
+            //         className: "announcement",
+            //         children: [
+            //             { tag: "h2", content: row["announce-post-title"] },
+            //             { tag: "p", content: row["post-date"] },
+            //             { tag: "p", content: row["post-type"] },
+            //             { tag: "p", content: row["announce-when"] },
+            //             { tag: "p", content: row["announce-where"] },
+            //             {
+            //                 tag: "img", attributes: {
+            //                     src: row["announce-img"],
+            //                 },
+            //             },
+            //             { tag: "p", content: row["announce-desc"] },
+            //             { tag: "p", content: row["announce-contact"] },
+            //             { tag: "p", content: row["announce-email"] },
+            //         ],
+            //     })
+            //         .appendTo("#posts");
+
+            //     sheet.createElement({
+            //         tag: "div",
+            //         className: "free",
+            //         children: [
+            //             { tag: "h2", content: row["free-post-title"] },
+            //             { tag: "p", content: row["post-date"] },
+            //             { tag: "p", content: row["post-type"] },
+            //             { tag: "p", content: row["free-when"] },
+            //             { tag: "p", content: row["free-where"] },
+            //             {
+            //                 tag: "img", attributes: {
+            //                     src: row["free-img"],
+            //                 },
+            //             },
+            //             { tag: "p", content: row["free-desc"] },
+            //             { tag: "p", content: row["free-contact"] },
+            //             { tag: "p", content: row["free-email"] },
+            //         ],
+            //     })
+            //         .appendTo("#posts");
+
+            // }
+    </script>
+
+
+</body>
+
+</html>
